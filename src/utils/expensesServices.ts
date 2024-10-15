@@ -1,5 +1,5 @@
 import { db } from "@/utils/firebase";
-import { collection, query, doc, getDoc, addDoc, getDocs, deleteDoc, updateDoc, ref, onSnapshot, DocumentSnapshot } from "firebase/firestore";
+import { collection, query, doc, getDoc, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import { ExpensesItem, ExpensesList } from "@/app/types";
 
 
@@ -161,9 +161,12 @@ export const deleteExpense = async (listId: string, itemId: string): Promise<voi
 // Update an expense
 
 // export const updateExpense = async (listId: string, itemId: string, updatedExpense: Partial<ExpensesItem>) => {
-export const updateExpense = async (listId: string, updatedExpense: ExpensesItem) => {
+export const updateExpense = async (listId: string, updatedExpense: Partial<ExpensesItem>) => {
+    if (!updatedExpense.id) {
+        throw new Error("Updated expense must have an ID.");
+    }
+
     try {
-        console.info('updatedExpense', updatedExpense.id, updatedExpense);
         await updateDoc(doc(db, "expensesLists", listId, "items", updatedExpense.id), updatedExpense);
     } catch (error) {
         console.error("Error updating task:", error);
