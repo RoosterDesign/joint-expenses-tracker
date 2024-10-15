@@ -23,12 +23,10 @@ const Navbar: React.FC = () => {
     return (
         <header className={`flex w-full items-center bg-white h-20`}>
             <div className="container">
-                <div className="relative -mx-4 flex items-center justify-between">
-                    <div className="px-4">
-                        <Link href={'/'} className="block w-full text-lg lg:text-2xl text-black font-bold">
-                            <Image src={logo} alt="" width={0} height={0} />
-                        </Link>
-                    </div>
+                <div className="pl-4 relative -mx-4 flex items-center justify-between">
+                    <Link href={'/'} className="max-w-[300px] sm:max-w-[200px] w-full block text-lg lg:text-2xl text-black font-bold">
+                        <Image src={logo} alt="" width={0} height={0} />
+                    </Link>
                     <div className="flex w-full items-center justify-between px-4 z-10">
                         <div>
                             <button

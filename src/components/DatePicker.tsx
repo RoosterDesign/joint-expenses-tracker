@@ -1,17 +1,20 @@
 import { useState, useEffect, useRef } from "react";
-import Button from '@/components/Button';
 
 interface Props {
     onValueChange: (value: string) => void;
-    defaultDate?: string;
+    defaultDate: string;
     sidebar?: boolean
 }
 
-const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate = null, sidebar }) => {
+const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate, sidebar }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState<string | null>(defaultDate);
+    const [selectedDate, setSelectedDate] = useState<string>('');
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const datepickerContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setSelectedDate(defaultDate);
+    }, [defaultDate]);
 
     const renderCalendar = () => {
         const year = currentDate.getFullYear();
@@ -54,6 +57,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate = null, sideba
     const handleDayClick = (selectedDay: string) => {
         setSelectedDate(selectedDay);
         onValueChange(selectedDay);
+        setIsCalendarOpen(false);
     };
 
     const handlePrevMonth = () => {
@@ -61,9 +65,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate = null, sideba
             const newDate = new Date(prevDate);
             newDate.setMonth(prevDate.getMonth() - 1);
             return newDate;
-        }
-
-        );
+        });
     };
 
     const handleNextMonth = () => {
@@ -71,19 +73,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate = null, sideba
             const newDate = new Date(prevDate);
             newDate.setMonth(prevDate.getMonth() + 1);
             return newDate;
-        }
-        );
-    };
-
-    const handleApply = () => {
-        if (selectedDate) {
-            setIsCalendarOpen(false);
-        }
-    };
-
-    const handleCancel = () => {
-        setSelectedDate(null);
-        // setIsCalendarOpen(false);
+        });
     };
 
     const handleToggleCalendar = () => {
@@ -145,18 +135,8 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate = null, sideba
                 {days.map((day, i) => <span key={i} className="flex h-[38px] w-[38px] items-center justify-center sm:h-[46px] sm:w-[47px]">{day}</span>)}
             </div>
 
-            <div
-                // ref={daysContainerRef}
-                id="days-container"
-                className="grid grid-cols-7 text-center text-sm font-medium sm:text-lg"
-            >
-                {/* Days will be rendered here */}
+            <div id="days-container" className="grid grid-cols-7 text-center text-sm font-medium sm:text-lg">
                 {renderCalendar()}
-            </div>
-
-            <div className="flex items-center space-x-3 pt-4 sm:space-x-5">
-                <Button small secondary onClick={handleCancel} className="w-full">Reset</Button>
-                <Button small onClick={handleApply} className="w-full">Done</Button>
             </div>
         </div>
     )

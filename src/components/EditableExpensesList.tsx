@@ -128,7 +128,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
             {modalOpen &&
                 <Modal>
                     <div className="flex items-center justify-center bg-red-100 rounded-full h-12 w-12 fill-red-600 mb-4">
-                        <svg height="25" clip-rule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m2.095 19.886 9.248-16.5a.753.753 0 0 1 1.313 0l9.248 16.5a.75.75 0 0 1-.656 1.116H2.752a.75.75 0 0 1-.657-1.116zm1.935-.384h15.939l-7.97-14.219zm7.972-6.497a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5a.75.75 0 0 0-.75-.75zm-.002-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" fillRule="nonzero" /></svg>
+                        <svg height="25" clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m2.095 19.886 9.248-16.5a.753.753 0 0 1 1.313 0l9.248 16.5a.75.75 0 0 1-.656 1.116H2.752a.75.75 0 0 1-.657-1.116zm1.935-.384h15.939l-7.97-14.219zm7.972-6.497a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5a.75.75 0 0 0-.75-.75zm-.002-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" fillRule="nonzero" /></svg>
                     </div>
                     <h3 className="font-bold text-xl md:text-2xl mb-4">Delete this Expense</h3>
                     <p className="text-body-color">Please confirm you want to delete this expense.</p>
@@ -166,7 +166,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                                         <div className="max-lg:mb-3">
                                             <label htmlFor="name" className="block font-bold mb-2 text-body-color lg:hidden">Date</label>
                                             <div className="h-12">
-                                                <DatePicker onValueChange={handleDateValueChange} defaultDate={formattedDate(editedItem?.date || '')} />
+                                                <DatePicker onValueChange={handleDateValueChange} defaultDate={formattedDate(editedItem!.date)} />
                                             </div>
                                         </div>
 
