@@ -8,36 +8,16 @@
       -webkit-appearance: none;
       margin: 0;
     }
+
+    body {
+        background: #0c110f;
+        color: #eef2f0;
+        font-family: var(--font-instrument-sans), sans-serif;
+    }
 }
 
-@layer components {
-  .expenseTableRow {
-    @apply
-        grid
-        px-2
-        py-5
-        gap-2
-        items-center
-        text-left
-        text-base
-        border-b-2
-        last:border-b-0
-        relative
-        md:px-4
-        lg:gap-4
-        lg:px-3
-        lg:py-3
-        lg:grid-cols-[95px_3fr_1fr_1fr_75px]
-        xl:gap-4
-        xl:px-5
-        xl:py-4
-        xl:grid-cols-[150px_2fr_1fr_1fr_75px]
-        2xl:grid-cols-[150px_2fr_1fr_1fr_75px]
-        ;
-  }
-
-  .tableActionButton {
-    @apply rounded h-[30px] w-[30px] flex items-center justify-center
-  }
-
+@layer utilities {
+    .font-num {
+        font-family: var(--font-space-grotesk), sans-serif;
+    }
 }

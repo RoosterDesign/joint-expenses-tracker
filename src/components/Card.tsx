@@ -1,14 +1,15 @@
 interface Props {
     children: React.ReactNode;
     overflow?: boolean;
+    className?: string;
 }
 
-const Card: React.FC<Props> = ({ children, overflow }) => {
+const Card: React.FC<Props> = ({ children, overflow, className = '' }) => {
     return (
-        <div className={`justify-start bg-white p-6 2xl:p-8 rounded-lg shadow-2 ${overflow ? 'overflow-x-auto' : ''}`}>
+        <div className={`bg-[#141b18] border border-white/[0.07] rounded-[22px] p-6 2xl:p-8 ${overflow ? 'overflow-x-auto' : ''} ${className}`}>
             {children}
         </div>
-    )
+    );
 }
 
 export default Card;

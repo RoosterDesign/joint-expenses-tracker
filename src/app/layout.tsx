@@ -1,13 +1,21 @@
 import { cookies } from 'next/headers';
 import type { Metadata } from "next";
-import { Roboto } from 'next/font/google'
+import { Instrument_Sans, Space_Grotesk } from 'next/font/google';
 import Header from '@/components/Header';
 import "./globals.css";
 
-const roboto = Roboto({
+const instrumentSans = Instrument_Sans({
     subsets: ['latin'],
     display: 'swap',
-    weight: ['100', '400', '500', '700', '900']
+    weight: ['400', '500', '600', '700'],
+    variable: '--font-instrument-sans',
+});
+
+const spaceGrotesk = Space_Grotesk({
+    subsets: ['latin'],
+    display: 'swap',
+    weight: ['600', '700'],
+    variable: '--font-space-grotesk',
 });
 
 export const metadata: Metadata = {
@@ -32,10 +40,8 @@ export default function RootLayout({
                 <meta name="apple-mobile-web-app-title" content="JET" />
                 <link rel="manifest" href="/site.webmanifest" />
             </head>
-            <body
-                className={`${roboto.className} bg-gray-2`}
-            >
-                <div className="min-h-screen flex flex-col">
+            <body className={`${instrumentSans.variable} ${spaceGrotesk.variable}`}>
+                <div className="min-h-screen flex flex-col bg-[#0c110f] text-[#eef2f0]" style={{ fontFamily: 'var(--font-instrument-sans), sans-serif' }}>
                     {isAuth && <Header />}
                     {children}
                 </div>
