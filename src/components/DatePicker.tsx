@@ -20,7 +20,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate, sidebar }) =>
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
 
-        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const firstDayOfMonth = (new Date(year, month, 1).getDay() + 6) % 7;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const daysArray = [];
 
