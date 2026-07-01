@@ -7,8 +7,8 @@ import { ExpensesItem, ExpensesList } from '@/app/types';
 import { formatNumber, roundToDecimals } from '@/utils/utils';
 import Modal from '@/components/Modal';
 
-const NEIL = '#34d399';
-const LOU = '#a78bfa';
+const NEIL = '#a78bfa';
+const LOU = '#fb7185';
 
 interface Props {
     listDetails: ExpensesList;
@@ -50,20 +50,20 @@ const ExpensesSummary: React.FC<Props> = ({ listDetails, listItems }) => {
         <>
             {modalOpen && (
                 <Modal>
-                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(52,211,153,0.14)] text-2xl text-[#34d399]">↻</div>
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(167,139,250,0.14)] text-2xl text-[#a78bfa]">↻</div>
                     <h3 className="mb-3 text-xl font-bold text-[#eef2f0]">Settle up &amp; archive</h3>
                     <p className="mx-auto max-w-96 text-[#8a978f]">Mark this month as paid? It moves to your Archive and a fresh month starts.</p>
                     <div className="mt-6 grid gap-3 md:grid-flow-col">
                         <button onClick={() => setModalOpen(false)} className="order-2 rounded-full border border-white/[0.12] px-8 py-3 font-semibold text-[#c3ccc7] md:order-1">Cancel</button>
-                        <button onClick={handleConfirmSettle} className="order-1 rounded-full bg-[#34d399] px-8 py-3 font-bold text-[#06110c] md:order-2">Confirm paid</button>
+                        <button onClick={handleConfirmSettle} className="order-1 rounded-full bg-[#a78bfa] px-8 py-3 font-bold text-[#0d0818] md:order-2">Confirm paid</button>
                     </div>
                 </Modal>
             )}
 
             <div className="relative overflow-hidden rounded-[22px] border border-white/[0.08] p-[28px_30px]"
-                 style={{ background: 'radial-gradient(120% 140% at 0% 0%, #16211c 0%, #0e1613 60%)' }}>
+                 style={{ background: 'radial-gradient(120% 140% at 0% 0%, #1c1628 0%, #0e0d18 60%)' }}>
                 <div className="pointer-events-none absolute -right-10 -top-10 h-[180px] w-[180px] rounded-full"
-                     style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.22), transparent 70%)' }} />
+                     style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.22), transparent 70%)' }} />
 
                 <div className="mb-[10px] text-[13px] text-[#8a978f]">Balance · this month</div>
 
@@ -97,7 +97,7 @@ const ExpensesSummary: React.FC<Props> = ({ listDetails, listItems }) => {
 
                 {!listDetails.archived && (
                     <button onClick={() => setModalOpen(true)}
-                            className="rounded-full bg-[#34d399] px-[26px] py-3 text-[14px] font-bold text-[#06110c]">Settle up</button>
+                            className="rounded-full bg-[#a78bfa] px-[26px] py-3 text-[14px] font-bold text-[#0d0818]">Settle up</button>
                 )}
             </div>
         </>
@@ -109,8 +109,8 @@ export default ExpensesSummary;
 export const PersonSpendCards: React.FC<Props> = ({ listDetails, listItems }) => {
     const t = useTotals(listDetails, listItems);
     const rows = [
-        { name: t.user1Name, sum: t.user1Sum, pct: t.user1Pct, color: NEIL, tint: 'rgba(52,211,153,0.15)' },
-        { name: t.user2Name, sum: t.user2Sum, pct: t.user2Pct, color: LOU, tint: 'rgba(167,139,250,0.16)' },
+        { name: t.user1Name, sum: t.user1Sum, pct: t.user1Pct, color: NEIL, tint: 'rgba(167,139,250,0.15)' },
+        { name: t.user2Name, sum: t.user2Sum, pct: t.user2Pct, color: LOU, tint: 'rgba(251,113,133,0.16)' },
     ];
     return (
         <div className="grid grid-rows-2 gap-[14px]">

@@ -35,7 +35,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate, sidebar }) =>
                 <div
                     key={i}
                     className={`flex items-center justify-center cursor-pointer w-[38px] h-[38px] rounded-full text-sm font-medium transition
-                        ${isSelected ? 'bg-[#34d399] text-[#06110c] font-bold' : 'text-[#c3ccc7] hover:bg-[#34d399]/20 hover:text-[#34d399]'}`}
+                        ${isSelected ? 'bg-[#a78bfa] text-[#0d0818] font-bold' : 'text-[#c3ccc7] hover:bg-[#a78bfa]/20 hover:text-[#a78bfa]'}`}
                     data-date={dayString}
                     onClick={() => handleDayClick(dayString)}
                 >
@@ -110,7 +110,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate, sidebar }) =>
                 <button
                     id="prevMonth"
                     type="button"
-                    className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-white/[0.09] bg-[#0e1512] text-[#8a978f] hover:text-[#34d399] transition"
+                    className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-white/[0.09] bg-[#0e1512] text-[#8a978f] hover:text-[#a78bfa] transition"
                     onClick={handlePrevMonth}
                 >
                     <svg fill="none" width="16" height="16" className="fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate, sidebar }) =>
                 <button
                     id="nextMonth"
                     type="button"
-                    className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-white/[0.09] bg-[#0e1512] text-[#8a978f] hover:text-[#34d399] transition"
+                    className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] border border-white/[0.09] bg-[#0e1512] text-[#8a978f] hover:text-[#a78bfa] transition"
                     onClick={handleNextMonth}
                 >
                     <svg width="16" height="16" fill="none" className="fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -151,7 +151,7 @@ const Datepicker: React.FC<Props> = ({ onValueChange, defaultDate, sidebar }) =>
                     id="datepicker"
                     type="text"
                     placeholder="Pick a date"
-                    className="h-full w-full appearance-none rounded-[13px] border border-white/[0.09] bg-[#0e1512] pl-10 pr-3 text-[14px] text-[#eef2f0] outline-none placeholder:text-[#7c887f] focus:border-[rgba(52,211,153,0.35)] transition"
+                    className="h-full w-full appearance-none rounded-[13px] border border-white/[0.09] bg-[#0e1512] pl-10 pr-3 text-[14px] text-[#eef2f0] outline-none placeholder:text-[#7c887f] focus:border-[rgba(167,139,250,0.35)] transition"
                     value={selectedDate || ""}
                     readOnly
                     onClick={handleToggleCalendar}

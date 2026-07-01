@@ -8,10 +8,10 @@ import DatePicker from '@/components/DatePicker';
 import Modal from '@/components/Modal';
 import SavingSpinner from '@/components/SavingSpinner';
 
-const NEIL = '#34d399';
-const LOU = '#a78bfa';
-const NEIL_TINT = 'rgba(52,211,153,0.15)';
-const LOU_TINT = 'rgba(167,139,250,0.16)';
+const NEIL = '#a78bfa';
+const LOU = '#fb7185';
+const NEIL_TINT = 'rgba(167,139,250,0.15)';
+const LOU_TINT = 'rgba(251,113,133,0.16)';
 
 interface Props {
     listDetails?: ExpensesList;
@@ -98,7 +98,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
 
                     <label className="mb-[7px] block text-left text-[12px] text-[#8a978f]">What was it for?</label>
                     <input value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })}
-                           className="mb-4 h-[46px] w-full rounded-[13px] border border-white/[0.09] bg-[#0e1512] px-[15px] text-left text-[14px] text-[#eef2f0] outline-none focus:border-[rgba(52,211,153,0.35)] transition" />
+                           className="mb-4 h-[46px] w-full rounded-[13px] border border-white/[0.09] bg-[#0e1512] px-[15px] text-left text-[14px] text-[#eef2f0] outline-none focus:border-[rgba(167,139,250,0.35)] transition" />
 
                     <div className="mb-4 grid grid-cols-2 gap-3">
                         <div>
@@ -120,8 +120,8 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                     </div>
 
                     <label className="mb-[7px] block text-left text-[12px] text-[#8a978f]">Amount</label>
-                    <div className="mb-[22px] flex h-[52px] items-center rounded-[13px] border border-[rgba(52,211,153,0.35)] bg-[#0e1512] px-[15px]">
-                        <span className="mr-2 text-[18px] font-bold text-[#34d399]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
+                    <div className="mb-[22px] flex h-[52px] items-center rounded-[13px] border border-[rgba(167,139,250,0.35)] bg-[#0e1512] px-[15px]">
+                        <span className="mr-2 text-[18px] font-bold text-[#a78bfa]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
                         <input type="number" step="any" min="0" value={edit.amount} onChange={(e) => setEdit({ ...edit, amount: e.target.value })}
                                className="w-full bg-transparent text-[18px] font-semibold text-[#eef2f0] outline-none" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }} />
                     </div>
@@ -129,7 +129,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                     {error && <p className="mb-3 text-left text-[13px] font-semibold text-[#fb7185]">{error}</p>}
 
                     <div className="mb-[14px] flex gap-[10px]">
-                        <button onClick={handleSave} className="flex h-[50px] flex-1 items-center justify-center rounded-full bg-[#34d399] text-[15px] font-bold text-[#06110c]">Save changes</button>
+                        <button onClick={handleSave} className="flex h-[50px] flex-1 items-center justify-center rounded-full bg-[#a78bfa] text-[15px] font-bold text-[#0d0818]">Save changes</button>
                         <button onClick={() => setEdit(null)} className="h-[50px] rounded-full border border-white/[0.12] px-[22px] text-[14px] font-semibold text-[#c3ccc7]">Cancel</button>
                     </div>
                     <button onClick={() => { const item = listItems.find((i) => i.id === edit.id) || null; setEdit(null); setDeleting(item); }}
@@ -165,7 +165,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                     return (
                         <div key={item.id}
                              className="relative flex items-center gap-[15px] rounded-[15px] p-[14px_16px] transition"
-                             style={open ? { background: '#141d18', border: '1px solid rgba(52,211,153,0.25)' } : { background: '#111815' }}>
+                             style={open ? { background: '#18142a', border: '1px solid rgba(167,139,250,0.25)' } : { background: '#111815' }}>
                             <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] text-[15px] font-bold"
                                  style={{ background: tintOfPayer(p), color: colorOfPayer(p), fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                                 {nameOfPayer(p).charAt(0)}

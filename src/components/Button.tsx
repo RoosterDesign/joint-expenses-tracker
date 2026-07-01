@@ -12,7 +12,7 @@ interface Props {
 }
 
 const Button: React.FC<Props> = ({ children, onClick, type = 'button', className = '', small, large, fullWidth, secondary, danger, ghost }) => {
-    let variant = 'bg-[#34d399] text-[#06110c]';
+    let variant = 'bg-[#a78bfa] text-[#0d0818]';
     if (secondary) variant = 'bg-[#1a221e] text-[#eef2f0]';
     if (danger) variant = 'bg-[#fb7185] text-[#1a0509]';
     if (ghost) variant = 'border border-white/[0.12] text-[#c3ccc7] bg-transparent';

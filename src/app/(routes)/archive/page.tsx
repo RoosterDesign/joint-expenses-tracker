@@ -7,8 +7,8 @@ import React, { useState, useEffect } from "react";
 import { ExpensesItem, ExpensesList } from '@/app/types';
 import { formatNumber, roundToDecimals } from '@/utils/utils';
 
-const NEIL = '#34d399';
-const LOU = '#a78bfa';
+const NEIL = '#a78bfa';
+const LOU = '#fb7185';
 
 interface ArchivedList extends ExpensesList {
     items: ExpensesItem[];

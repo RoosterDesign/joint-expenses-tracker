@@ -40,7 +40,7 @@ const Header: React.FC = () => {
                 <div className="flex h-16 items-center justify-between gap-4">
                     <Link href="/" className="flex items-center gap-3 shrink-0">
                         <div className="h-[34px] w-[34px] rounded-[11px]"
-                             style={{ background: 'linear-gradient(120deg,#34d399 0 50%,#a78bfa 50% 100%)' }} />
+                             style={{ background: 'linear-gradient(120deg,#a78bfa 0 50%,#fb7185 50% 100%)' }} />
                         <span className="text-[16px]">
                             <span className="font-bold text-[#eef2f0]">Joint</span>
                             <span className="font-medium text-[#7f8c84]"> Expenses</span>

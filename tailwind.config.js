@@ -20,8 +20,8 @@ module.exports = {
         },
         colors: {
             'primary': '#059669',
-            'neil': '#34d399',
-            'lou': '#a78bfa',
+            'neil': '#a78bfa',
+            'lou': '#fb7185',
             'danger': '#fb7185',
             'surface': '#141b18',
             'surface-row': '#111815',

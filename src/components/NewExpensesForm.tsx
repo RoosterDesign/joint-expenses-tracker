@@ -7,10 +7,10 @@ import DatePicker from '@/components/DatePicker';
 import SavingSpinner from '@/components/SavingSpinner';
 import { formatNumber } from '@/utils/utils';
 
-const NEIL = '#34d399';
-const LOU = '#a78bfa';
-const NEIL_TINT = 'rgba(52,211,153,0.15)';
-const LOU_TINT = 'rgba(167,139,250,0.16)';
+const NEIL = '#a78bfa';
+const LOU = '#fb7185';
+const NEIL_TINT = 'rgba(167,139,250,0.15)';
+const LOU_TINT = 'rgba(251,113,133,0.16)';
 
 interface Props {
     listDetails: ExpensesList;
@@ -71,7 +71,7 @@ const NewExpensesForm: React.FC<Props> = ({ listDetails }) => {
                 placeholder="e.g. Groceries"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mb-4 h-[46px] w-full rounded-[13px] border border-white/[0.09] bg-[#0e1512] px-[15px] text-[14px] text-[#eef2f0] outline-none placeholder:text-[#7c887f] focus:border-[rgba(52,211,153,0.35)] transition"
+                className="mb-4 h-[46px] w-full rounded-[13px] border border-white/[0.09] bg-[#0e1512] px-[15px] text-[14px] text-[#eef2f0] outline-none placeholder:text-[#7c887f] focus:border-[rgba(167,139,250,0.35)] transition"
             />
 
             <div className="mb-4 grid grid-cols-2 gap-3">
@@ -96,8 +96,8 @@ const NewExpensesForm: React.FC<Props> = ({ listDetails }) => {
             </div>
 
             <label className="mb-[7px] block text-[12px] text-[#8a978f]">Amount</label>
-            <div className="mb-1 flex h-[52px] items-center rounded-[13px] border border-[rgba(52,211,153,0.35)] bg-[#0e1512] px-[15px]">
-                <span className="mr-2 text-[18px] font-bold text-[#34d399]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
+            <div className="mb-1 flex h-[52px] items-center rounded-[13px] border border-[rgba(167,139,250,0.35)] bg-[#0e1512] px-[15px]">
+                <span className="mr-2 text-[18px] font-bold text-[#a78bfa]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
                 <input
                     type="number"
                     step="any"
@@ -118,7 +118,7 @@ const NewExpensesForm: React.FC<Props> = ({ listDetails }) => {
             {error && <p className="mb-3 text-[13px] font-semibold text-[#fb7185]">{error}</p>}
 
             <button type="submit"
-                    className="flex h-[50px] w-full items-center justify-center rounded-full bg-[#34d399] text-[15px] font-bold text-[#06110c] transition hover:opacity-90">
+                    className="flex h-[50px] w-full items-center justify-center rounded-full bg-[#a78bfa] text-[15px] font-bold text-[#0d0818] transition hover:opacity-90">
                 Add expense
             </button>
         </form>
