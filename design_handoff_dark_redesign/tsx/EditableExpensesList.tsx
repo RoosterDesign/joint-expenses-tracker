@@ -8,6 +8,15 @@ import DatePicker from '@/components/DatePicker';
 import Modal from '@/components/Modal';
 import SavingSpinner from '@/components/SavingSpinner';
 
+/*
+ * Expense feed + ⋯ menu + edit sheet + delete confirm (design 3a / 3c).
+ * Drop-in replacement for src/components/EditableExpensesList.tsx.
+ *
+ * Colours: Neil (user1) = green, Lou (user2) = violet. "Who paid" = whichever
+ * of user1Spent / user2Spent is non-zero. Half = (user1Spent + user2Spent) / 2.
+ * Keeps the existing updateExpense / deleteExpense services and the ExpensesItem model.
+ */
+
 const NEIL = '#34d399';
 const LOU = '#a78bfa';
 const NEIL_TINT = 'rgba(52,211,153,0.15)';
@@ -29,6 +38,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
     const [error, setError] = useState('');
     const menuRef = useRef<HTMLDivElement | null>(null);
 
+    // close ⋯ menu on outside click
     useEffect(() => {
         const onDoc = (e: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpenId(null);
@@ -55,7 +65,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
         setEdit({
             id: i.id, name: i.name, payer: payerOf(i),
             amount: String(amountOf(i)),
-            date: new Date(i.date).toLocaleDateString('en-gb'),
+            date: new Date(i.date).toLocaleDateString('en-gb'), // dd/mm/yyyy for DatePicker
         });
         setError('');
     };
@@ -91,26 +101,26 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
             {edit && (
                 <Modal>
                     {isSaving && <SavingSpinner label="Saving" />}
-                    <div className="mb-5 flex items-center justify-between text-left">
+                    <div className="mb-5 flex items-center justify-between">
                         <h3 className="text-[17px] font-bold text-[#eef2f0]">Edit expense</h3>
                         <button onClick={() => setEdit(null)} className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-[#1b231f] text-[#8a978f]">✕</button>
                     </div>
 
-                    <label className="mb-[7px] block text-left text-[12px] text-[#8a978f]">What was it for?</label>
+                    <label className="mb-[7px] block text-[12px] text-[#8a978f]">What was it for?</label>
                     <input value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })}
-                           className="mb-4 h-[46px] w-full rounded-[13px] border border-white/[0.09] bg-[#0e1512] px-[15px] text-left text-[14px] text-[#eef2f0] outline-none focus:border-[rgba(52,211,153,0.35)] transition" />
+                           className="mb-4 h-[46px] w-full rounded-[13px] border border-white/[0.09] bg-[#0e1512] px-[15px] text-[14px] text-[#eef2f0] outline-none" />
 
                     <div className="mb-4 grid grid-cols-2 gap-3">
                         <div>
-                            <label className="mb-[7px] block text-left text-[12px] text-[#8a978f]">Date</label>
+                            <label className="mb-[7px] block text-[12px] text-[#8a978f]">Date</label>
                             <div className="h-[46px]"><DatePicker onValueChange={(v: string) => setEdit({ ...edit, date: v })} defaultDate={edit.date} /></div>
                         </div>
                         <div>
-                            <label className="mb-[7px] block text-left text-[12px] text-[#8a978f]">Who paid?</label>
+                            <label className="mb-[7px] block text-[12px] text-[#8a978f]">Who paid?</label>
                             <div className="flex h-[46px] gap-1 rounded-[13px] border border-white/[0.09] bg-[#0e1512] p-1">
                                 {(['user1', 'user2'] as Payer[]).map((p) => (
                                     <button key={p} onClick={() => setEdit({ ...edit, payer: p })}
-                                            className="flex flex-1 items-center justify-center rounded-[10px] text-[13px] font-semibold transition"
+                                            className="flex flex-1 items-center justify-center rounded-[10px] text-[13px] font-semibold"
                                             style={edit.payer === p ? { background: tintOfPayer(p), color: colorOfPayer(p) } : { color: '#8a978f' }}>
                                         {nameOfPayer(p)}
                                     </button>
@@ -119,14 +129,14 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                         </div>
                     </div>
 
-                    <label className="mb-[7px] block text-left text-[12px] text-[#8a978f]">Amount</label>
+                    <label className="mb-[7px] block text-[12px] text-[#8a978f]">Amount</label>
                     <div className="mb-[22px] flex h-[52px] items-center rounded-[13px] border border-[rgba(52,211,153,0.35)] bg-[#0e1512] px-[15px]">
-                        <span className="mr-2 text-[18px] font-bold text-[#34d399]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
+                        <span className="mr-2 font-num text-[18px] font-bold text-[#34d399]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
                         <input type="number" step="any" min="0" value={edit.amount} onChange={(e) => setEdit({ ...edit, amount: e.target.value })}
-                               className="w-full bg-transparent text-[18px] font-semibold text-[#eef2f0] outline-none" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }} />
+                               className="w-full bg-transparent font-num text-[18px] font-semibold text-[#eef2f0] outline-none" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }} />
                     </div>
 
-                    {error && <p className="mb-3 text-left text-[13px] font-semibold text-[#fb7185]">{error}</p>}
+                    {error && <p className="mb-3 text-[13px] font-semibold text-[#fb7185]">{error}</p>}
 
                     <div className="mb-[14px] flex gap-[10px]">
                         <button onClick={handleSave} className="flex h-[50px] flex-1 items-center justify-center rounded-full bg-[#34d399] text-[15px] font-bold text-[#06110c]">Save changes</button>
@@ -150,13 +160,13 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                 </Modal>
             )}
 
-            {/* FEED HEADER */}
+            {/* FEED */}
             <div className="mb-4 flex items-baseline justify-between">
                 <h2 className="text-[17px] font-bold text-[#eef2f0]">This month</h2>
                 <span className="text-[12px] text-[#7c887f]">{listItems.length} expenses · £{formatNumber(total)} total</span>
             </div>
 
-            {listItems.length === 0 && <p className="mt-5 text-center text-[14px] font-semibold text-[#8a978f]">Add your first expense.</p>}
+            {listItems.length === 0 && <p className="mt-5 text-center font-semibold text-[#8a978f]">Add your first expense.</p>}
 
             <div className="flex flex-col gap-2">
                 {listItems.map((item) => {
@@ -164,9 +174,9 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                     const open = menuOpenId === item.id;
                     return (
                         <div key={item.id}
-                             className="relative flex items-center gap-[15px] rounded-[15px] p-[14px_16px] transition"
+                             className="relative flex items-center gap-[15px] rounded-[15px] p-[14px_16px]"
                              style={open ? { background: '#141d18', border: '1px solid rgba(52,211,153,0.25)' } : { background: '#111815' }}>
-                            <div className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-[12px] text-[15px] font-bold"
+                            <div className="flex h-[38px] w-[38px] items-center justify-center rounded-[12px] text-[15px] font-bold"
                                  style={{ background: tintOfPayer(p), color: colorOfPayer(p), fontFamily: 'var(--font-space-grotesk), sans-serif' }}>
                                 {nameOfPayer(p).charAt(0)}
                             </div>
@@ -175,18 +185,18 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                                 <div className="mt-0.5 text-[12.5px] text-[#7c887f]">{fmtDate(item.date)} · {nameOfPayer(p)} paid</div>
                             </div>
                             <div className="text-right">
-                                <div className="text-[16px] font-semibold text-[#eef2f0]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£{formatNumber(amountOf(item))}</div>
+                                <div className="font-num text-[16px] font-semibold text-[#eef2f0]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£{formatNumber(amountOf(item))}</div>
                                 <div className="mt-0.5 text-[11.5px] text-[#7c887f]">your half £{formatNumber(halfOf(item))}</div>
                             </div>
 
                             <button onClick={() => setMenuOpenId(open ? null : item.id)}
-                                    className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[10px] text-[16px] tracking-widest transition"
+                                    className="flex h-[32px] w-[32px] items-center justify-center rounded-[10px] text-[16px] tracking-widest"
                                     style={open ? { background: '#242e29', color: '#eef2f0' } : { background: '#1b231f', color: '#8a978f' }}>⋯</button>
 
                             {open && (
                                 <div ref={menuRef} className="absolute right-3 top-[60px] z-10 w-[170px] rounded-[14px] border border-white/10 bg-[#1a221e] p-1.5"
                                      style={{ boxShadow: '0 18px 40px rgba(0,0,0,0.45)' }}>
-                                    <button onClick={() => openEdit(item)} className="flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[13.5px] font-medium text-[#eef2f0] hover:bg-white/5 transition">
+                                    <button onClick={() => openEdit(item)} className="flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[13.5px] font-medium text-[#eef2f0] hover:bg-white/5">
                                         <span className="text-[14px]">✎</span> Edit expense
                                     </button>
                                     <button onClick={() => { setMenuOpenId(null); setDeleting(item); }} className="flex w-full items-center gap-2.5 rounded-[10px] bg-[rgba(251,113,133,0.1)] px-3 py-2.5 text-left text-[13.5px] font-medium text-[#fb7185]">

@@ -1,71 +1,73 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import Link from 'next/link'
-import Image from 'next/image';
+import { useEffect, useState } from "react";
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Button from '@/components/Button';
-import logo from '/public/images/logo.svg';
 
-const Navbar: React.FC = () => {
-    const [open, setOpen] = useState(false);
+const Header: React.FC = () => {
+    const [, setOpen] = useState(false);
     const pathname = usePathname();
 
     useEffect(() => {
         setOpen(false);
-    }, [pathname])
+    }, [pathname]);
 
     const handleLogout = async () => {
         await fetch('/api/logout', { method: 'POST' });
         window.location.href = '/login';
     };
 
+    const isExpenses = pathname === '/';
+    const isArchive = pathname.startsWith('/archive');
+
+    const NavToggle = ({ mobile }: { mobile?: boolean }) => (
+        <div className={`flex rounded-full border border-white/[0.07] bg-[#141b18] p-1 gap-1 ${mobile ? 'w-full' : ''}`}>
+            <Link href="/"
+                className={`rounded-full px-5 py-1.5 text-[14px] font-semibold transition ${isExpenses ? 'bg-[#242e29] text-[#eef2f0]' : 'text-[#8a978f] hover:text-[#c3ccc7]'} ${mobile ? 'flex-1 text-center' : ''}`}>
+                Expenses
+            </Link>
+            <Link href="/archive"
+                className={`rounded-full px-5 py-1.5 text-[14px] font-semibold transition ${isArchive ? 'bg-[#242e29] text-[#eef2f0]' : 'text-[#8a978f] hover:text-[#c3ccc7]'} ${mobile ? 'flex-1 text-center' : ''}`}>
+                Archive
+            </Link>
+        </div>
+    );
+
     return (
-        <header className={`flex w-full items-center bg-white h-20`}>
+        <header className="w-full border-b border-white/[0.07] bg-[#0c110f]">
             <div className="container">
-                <div className="pl-4 relative -mx-4 flex items-center justify-between">
-                    <Link href={'/'} className="max-w-[300px] sm:max-w-[200px] w-full block text-lg lg:text-2xl text-black font-bold">
-                        <Image src={logo} alt="" width={0} height={0} />
+                {/* Desktop row */}
+                <div className="flex h-16 items-center justify-between gap-4">
+                    <Link href="/" className="flex items-center gap-3 shrink-0">
+                        <div className="h-[34px] w-[34px] rounded-[11px]"
+                             style={{ background: 'linear-gradient(120deg,#34d399 0 50%,#a78bfa 50% 100%)' }} />
+                        <span className="text-[16px]">
+                            <span className="font-bold text-[#eef2f0]">Joint</span>
+                            <span className="font-medium text-[#7f8c84]"> Expenses</span>
+                        </span>
                     </Link>
-                    <div className="flex w-full items-center justify-between px-4 z-10">
-                        <div>
-                            <button
-                                onClick={() => setOpen(!open)}
-                                id="navbarToggler"
-                                className={` ${open && "navbarTogglerActive"
-                                    } absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden`}
-                            >
-                                <span className="relative my-[6px] block h-[2px] w-[30px] bg-body-color "></span>
-                                <span className="relative my-[6px] block h-[2px] w-[30px] bg-body-color "></span>
-                                <span className="relative my-[6px] block h-[2px] w-[30px] bg-body-color "></span>
-                            </button>
-                            <nav
-                                id="navbarCollapse"
-                                className={`absolute right-4 top-full w-full max-w-[250px] rounded-lg bg-white px-6 py-5 shadow lg:static lg:block lg:w-full lg:max-w-full lg:bg-transparent lg:shadow-none ${!open && "hidden"
-                                    } `}
-                            >
-                                <ul className="block lg:flex">
-                                    <li>
-                                        <Link href="/#"
-                                            className={` ${pathname === "/" ? "!text-dark" : "text-body-color"} flex py-2 text-base font-[700] hover:text-primary lg:ml-12 lg:inline-flex`}>Expenses List</Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/archive" className={` ${pathname.startsWith("/archive") ? "!text-dark" : "text-body-color"} flex py-2 text-base font-[700] hover:text-primary lg:ml-12 lg:inline-flex`}>Archive</Link>
-                                    </li>
-                                    <li className="sm:hidden mt-2 border-t pt-4">
-                                        <a href="" className="font-bold" onClick={handleLogout}>Logout</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <div className="hidden sm:flex justify-end pr-16 lg:pr-0">
-                            <Button onClick={handleLogout} small>Logout</Button>
-                        </div>
+
+                    <div className="hidden sm:flex">
+                        <NavToggle />
                     </div>
+
+                    <button onClick={handleLogout}
+                            className="hidden sm:inline-flex rounded-full border border-white/[0.12] px-5 py-1.5 text-[13px] font-semibold text-[#c3ccc7] hover:text-[#eef2f0] transition">
+                        Logout
+                    </button>
+
+                    <button onClick={handleLogout} className="sm:hidden text-[13px] font-medium text-[#c3ccc7]">
+                        Logout
+                    </button>
+                </div>
+
+                {/* Mobile nav toggle */}
+                <div className="sm:hidden pb-3">
+                    <NavToggle mobile />
                 </div>
             </div>
         </header>
     );
 };
 
-export default Navbar;
+export default Header;

@@ -2,177 +2,127 @@
 
 import { useState } from 'react';
 import { addExpense } from '@/utils/expensesServices';
-import { ExpensesList, ExpensesFormData, ExpensesItem } from '@/app/types';
-import Button from '@/components/Button';
+import { ExpensesList, ExpensesItem } from '@/app/types';
 import DatePicker from '@/components/DatePicker';
 import SavingSpinner from '@/components/SavingSpinner';
+import { formatNumber } from '@/utils/utils';
+
+const NEIL = '#34d399';
+const LOU = '#a78bfa';
+const NEIL_TINT = 'rgba(52,211,153,0.15)';
+const LOU_TINT = 'rgba(167,139,250,0.16)';
 
 interface Props {
     listDetails: ExpensesList;
 }
 
-interface Errors {
-    name?: string;
-    user1Spent?: string;
-    user2Spent?: string;
-    numbers?: string;
-}
+type Payer = 'user1' | 'user2';
 
 const NewExpensesForm: React.FC<Props> = ({ listDetails }) => {
-    const NEW_ITEM_DEFAULT = { date: new Date().toLocaleDateString('en-gb'), name: '', user1Spent: '', user2Spent: '' };
-    const [newItem, setNewItem] = useState<ExpensesFormData>(NEW_ITEM_DEFAULT);
-    const [errors, setErrors] = useState<Errors>({});
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [date, setDate] = useState(new Date().toLocaleDateString('en-gb'));
+    const [name, setName] = useState('');
+    const [payer, setPayer] = useState<Payer>('user1');
+    const [amount, setAmount] = useState('');
+    const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleDateValueChange = (newValue: string) => {
-        setNewItem({ ...newItem, date: newValue })
-    };
+    const { user1Name, user2Name } = listDetails;
+    const nameOfPayer = (p: Payer) => (p === 'user1' ? user1Name : user2Name);
+    const colorOfPayer = (p: Payer) => (p === 'user1' ? NEIL : LOU);
+    const tintOfPayer = (p: Payer) => (p === 'user1' ? NEIL_TINT : LOU_TINT);
 
-    // Form validation
-    const validateForm = (): Errors => {
-        const validationErrors: Errors = {};
+    const half = parseFloat(amount) > 0 ? parseFloat(amount) / 2 : 0;
 
-        // Check if name is empty
-        if (!newItem.name.trim()) {
-            validationErrors.name = "Expense name is required";
-        }
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!name.trim()) return setError('Expense name is required.');
+        const amt = parseFloat(amount);
+        if (!amt || amt <= 0) return setError('Enter an amount above zero.');
 
-        // Check if number1 or number2 are 0, and both are empty or 0
-        if (!newItem.user1Spent && !newItem.user2Spent || (parseInt(newItem.user1Spent) === 0 || !newItem.user1Spent) && parseInt(newItem.user2Spent) === 0 || (parseInt(newItem.user2Spent) === 0 || !newItem.user2Spent) && parseInt(newItem.user1Spent) === 0) {
-            validationErrors.user1Spent = "At least one amount must be entered (above zero!)";
+        setError('');
+        setIsSubmitting(true);
+
+        const [d, m, y] = date.split('/').map((n) => parseInt(n, 10));
+        const iso = new Date(y, m - 1, d).toISOString();
+        const newExpense: Omit<ExpensesItem, 'id'> = {
+            date: iso,
+            name: name.trim(),
+            user1Spent: payer === 'user1' ? amt : 0,
+            user2Spent: payer === 'user2' ? amt : 0,
         };
 
-        return validationErrors;
-    };
-
-
-    // Add item to database
-    const handleAddExpense = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        const validationErrors = validateForm();
-
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            setIsSubmitting(false);
-        } else {
-            setErrors({});
-
-            // Submit the form or process data
-            const dateObj: string[] = newItem.date.split('/');
-            const day = parseInt(dateObj[0], 10);
-            const month = parseInt(dateObj[1], 10) - 1;
-            const year = parseInt(dateObj[2], 10);
-            const newDate: string = new Date(year, month, day).toISOString();
-            const newExpense: Omit<ExpensesItem, 'id'> = {
-                date: newDate,
-                name: newItem.name.trim(),
-                user1Spent: newItem.user1Spent ? parseFloat(newItem.user1Spent) : 0,
-                user2Spent: newItem.user2Spent ? parseFloat(newItem.user2Spent) : 0
-            }
-            await addExpense(listDetails.id, newExpense);
-            setNewItem(NEW_ITEM_DEFAULT);
-            setIsSubmitting(false);
-        }
+        await addExpense(listDetails.id, newExpense);
+        setName('');
+        setAmount('');
+        setPayer('user1');
+        setDate(new Date().toLocaleDateString('en-gb'));
+        setIsSubmitting(false);
     };
 
     return (
-        <form onSubmit={handleAddExpense} className="relative">
-
-            <h2 className="border-b-2 font-bold text-xl mb-5 pb-5">Add new expense</h2>
-
+        <form onSubmit={handleSubmit} className="relative">
             {isSubmitting && <SavingSpinner label="Saving" />}
 
-            <div className="grid gap-x-4 gap-y-8 items-center">
+            <h2 className="mb-5 text-[17px] font-bold text-[#eef2f0]">Add an expense</h2>
 
-                <div className="h-12 mb-6 col-span-2">
-                    <label htmlFor="name" className="block font-bold mb-2 text-body-color">Date</label>
-                    <DatePicker onValueChange={handleDateValueChange} defaultDate={newItem.date} sidebar />
-                </div>
+            <label className="mb-[7px] block text-[12px] text-[#8a978f]">What was it for?</label>
+            <input
+                type="text"
+                placeholder="e.g. Groceries"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mb-4 h-[46px] w-full rounded-[13px] border border-white/[0.09] bg-[#0e1512] px-[15px] text-[14px] text-[#eef2f0] outline-none placeholder:text-[#7c887f] focus:border-[rgba(52,211,153,0.35)] transition"
+            />
 
-                <div className="h-12 mb-6 col-span-2">
-                    <label htmlFor="name" className="block font-bold mb-2 text-body-color">Expense name</label>
-                    <input
-                        type="text"
-                        placeholder="Expense name"
-                        className="w-full h-full bg-transparent rounded-md border border-stroke py-[10px] px-5 text-dark outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 disabled:border-gray-2"
-                        value={newItem.name}
-                        id="name"
-                        onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                    />
-                </div>
-
-
-                <div className="h-12 mb-6 col-start-1 col-end-2 lg:col-span-2 xl:col-span-1">
-                    <label htmlFor="name" className="block font-bold mb-2 text-body-color">{listDetails.user1Name} Spent</label>
-                    <div className='flex items-center h-full'>
-                        <span className='h-full rounded-tl-md rounded-bl-md border border-r-0 py-[10px] px-3 text-base font-bold uppercase text-white border-emerald-600 bg-emerald-600'>£</span>
-                        <input
-                            type="number"
-                            step="any"
-                            min="0"
-                            value={newItem.user1Spent}
-                            onChange={(e) => setNewItem({ ...newItem, user1Spent: e.target.value })}
-                            className='w-full h-full bg-transparent rounded-br-md rounded-tr-md border border-stroke  py-[10px] px-3 text-dark outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2'
-                        />
+            <div className="mb-4 grid grid-cols-2 gap-3">
+                <div>
+                    <label className="mb-[7px] block text-[12px] text-[#8a978f]">Date</label>
+                    <div className="h-[46px]">
+                        <DatePicker onValueChange={setDate} defaultDate={date} sidebar />
                     </div>
                 </div>
-
-                <div className="h-12 mb-6 col-start-2 col-end-3 lg:col-span-2 xl:col-span-1">
-                    <label htmlFor="name" className="block font-bold mb-2 text-body-color">{listDetails.user2Name} Spent</label>
-                    <div className='flex items-center h-full'>
-                        <span className='h-full rounded-tl-md rounded-bl-md border border-r-0 py-[10px] px-3 text-base font-bold uppercase text-white border-emerald-600 bg-emerald-600'>£</span>
-                        <input
-                            type="number"
-                            step="any"
-                            min="0"
-                            value={newItem.user2Spent}
-                            onChange={(e) => setNewItem({ ...newItem, user2Spent: e.target.value })}
-                            className='w-full h-full bg-transparent rounded-br-md rounded-tr-md border border-stroke py-[10px] px-3 text-dark outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2'
-                        />
+                <div>
+                    <label className="mb-[7px] block text-[12px] text-[#8a978f]">Who paid?</label>
+                    <div className="flex h-[46px] gap-1 rounded-[13px] border border-white/[0.09] bg-[#0e1512] p-1">
+                        {(['user1', 'user2'] as Payer[]).map((p) => (
+                            <button key={p} type="button" onClick={() => setPayer(p)}
+                                    className="flex flex-1 items-center justify-center rounded-[10px] text-[13px] font-semibold transition"
+                                    style={payer === p ? { background: tintOfPayer(p), color: colorOfPayer(p) } : { color: '#8a978f' }}>
+                                {nameOfPayer(p)}
+                            </button>
+                        ))}
                     </div>
                 </div>
-
-                <div className="text-center flex justify-end col-span-2">
-                    <Button className="w-full text-base px-0 py-0" type="submit">Add new expense</Button>
-                </div>
-
             </div>
 
-            {
-                Object.keys(errors).length > 0 &&
-                <div className="flex flex-col w-full rounded-lg border-l-[6px] border-red bg-red-light-6 px-5 py-5 mt-8 mb-4 shadow-[0px_2px_10px_0px_rgba(0,0,0,0.08)]">
-                    <h5 className="text-base font-semibold text-red-600 mb-3">
-                        There {Object.keys(errors).length === 1 ? 'is' : 'are'} {Object.keys(errors).length} {Object.keys(errors).length === 1 ? 'error' : 'errors'}!
-                    </h5>
+            <label className="mb-[7px] block text-[12px] text-[#8a978f]">Amount</label>
+            <div className="mb-1 flex h-[52px] items-center rounded-[13px] border border-[rgba(52,211,153,0.35)] bg-[#0e1512] px-[15px]">
+                <span className="mr-2 text-[18px] font-bold text-[#34d399]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
+                <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="w-full bg-transparent text-[18px] font-semibold text-[#eef2f0] outline-none placeholder:text-[#3d4d46]"
+                    style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
+                />
+            </div>
 
-                    <ul className="list-inside list-disc">
-                        {errors.numbers &&
-                            <li className="text-base leading-relaxed text-red-light">
-                                {errors.numbers}
-                            </li>
-                        }
-                        {errors.name &&
-                            <li className="text-base leading-relaxed text-red-light">
-                                {errors.name}
-                            </li>
-                        }
-                        {errors.user1Spent &&
-                            <li className="text-base leading-relaxed text-red-light">
-                                {errors.user1Spent}
-                            </li>
-                        }
-                        {errors.user2Spent &&
-                            <li className="text-base leading-relaxed text-red-light">
-                                {errors.user2Spent}
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
+            {half > 0 && (
+                <p className="mb-4 text-[12px] text-[#7c887f]">Split 50 / 50 — each pays £{formatNumber(half)}</p>
+            )}
+            {!half && <div className="mb-4" />}
 
-        </form >
-    )
+            {error && <p className="mb-3 text-[13px] font-semibold text-[#fb7185]">{error}</p>}
+
+            <button type="submit"
+                    className="flex h-[50px] w-full items-center justify-center rounded-full bg-[#34d399] text-[15px] font-bold text-[#06110c] transition hover:opacity-90">
+                Add expense
+            </button>
+        </form>
+    );
 };
 
 export default NewExpensesForm;

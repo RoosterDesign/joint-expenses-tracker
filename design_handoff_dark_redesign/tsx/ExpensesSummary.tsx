@@ -7,6 +7,24 @@ import { ExpensesItem, ExpensesList } from '@/app/types';
 import { formatNumber, roundToDecimals } from '@/utils/utils';
 import Modal from '@/components/Modal';
 
+/*
+ * Balance hero + split bar (design 3a / 3b).
+ * Drop-in replacement for src/components/ExpensesSummary.tsx.
+ *
+ * Layout note: in the redesign the hero row is a 2-col grid —
+ *   [ <ExpensesSummary> (balance card) | <PersonSpendCards> ]
+ * so this file exports BOTH. Place them in page.tsx like:
+ *
+ *   <div className="grid gap-[22px] lg:grid-cols-[1.15fr_1fr]">
+ *     <ExpensesSummary listDetails={list} listItems={items} />
+ *     <PersonSpendCards listDetails={list} listItems={items} />
+ *   </div>
+ *
+ * Colours: Neil (user1) = green #34d399, Lou (user2) = violet #a78bfa.
+ * The balance figure is tinted with the *owed* person's colour (matches the mock).
+ * Tailwind arbitrary values are used so this works before you add tokens to the config.
+ */
+
 const NEIL = '#34d399';
 const LOU = '#a78bfa';
 
@@ -35,10 +53,13 @@ function useTotals(listDetails: ExpensesList, listItems: ExpensesItem[]) {
     return { user1Name, user2Name, user1Sum, user2Sum, total, equalShare, ower, owed, amount, owerIsUser1, settled, user1Pct, user2Pct };
 }
 
+/* ---------- Balance card (default export) ---------- */
+
 const ExpensesSummary: React.FC<Props> = ({ listDetails, listItems }) => {
     const t = useTotals(listDetails, listItems);
     const [modalOpen, setModalOpen] = useState(false);
 
+    // figure colour = the person who is OWED
     const figureColor = t.settled ? '#eef2f0' : (t.owerIsUser1 ? LOU : NEIL);
 
     const handleConfirmSettle = async () => {
@@ -76,7 +97,7 @@ const ExpensesSummary: React.FC<Props> = ({ listDetails, listItems }) => {
                 ) : (
                     <>
                         <div className="text-[15px] text-[#c3ccc7]">{t.ower} owes {t.owed}</div>
-                        <div className="mb-[22px] mt-2 font-num text-[52px] lg:text-[66px] font-bold leading-none tracking-[-0.03em]"
+                        <div className="mb-[22px] mt-2 font-num text-[66px] font-bold leading-none tracking-[-0.03em]"
                              style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', color: figureColor }}>£{formatNumber(t.amount)}</div>
                     </>
                 )}
@@ -106,6 +127,8 @@ const ExpensesSummary: React.FC<Props> = ({ listDetails, listItems }) => {
 
 export default ExpensesSummary;
 
+/* ---------- Person-spend cards (right column of the hero) ---------- */
+
 export const PersonSpendCards: React.FC<Props> = ({ listDetails, listItems }) => {
     const t = useTotals(listDetails, listItems);
     const rows = [
@@ -116,14 +139,14 @@ export const PersonSpendCards: React.FC<Props> = ({ listDetails, listItems }) =>
         <div className="grid grid-rows-2 gap-[14px]">
             {rows.map((r) => (
                 <div key={r.name} className="flex items-center gap-[14px] rounded-[18px] border border-white/[0.07] bg-[#141b18] p-[16px_20px]">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] text-[18px] font-bold"
+                    <div className="flex h-11 w-11 items-center justify-center rounded-[13px] text-[18px] font-bold"
                          style={{ background: r.tint, color: r.color, fontFamily: 'var(--font-space-grotesk), sans-serif' }}>{r.name.charAt(0)}</div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1">
                         <div className="text-[13px] text-[#8a978f]">{r.name} spent</div>
                         <div className="font-num text-[24px] font-semibold tracking-[-0.02em] text-[#eef2f0]"
                              style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£{formatNumber(r.sum)}</div>
                     </div>
-                    <div className="w-[100px] shrink-0">
+                    <div className="w-[120px]">
                         <div className="h-[7px] overflow-hidden rounded-full bg-[#232b27]">
                             <div className="h-full" style={{ width: `${r.pct}%`, background: r.color }} />
                         </div>
