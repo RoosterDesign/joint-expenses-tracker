@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Logo from './Logo';
 
 const Header: React.FC = () => {
     const [, setOpen] = useState(false);
@@ -39,8 +40,7 @@ const Header: React.FC = () => {
                 {/* Desktop row */}
                 <div className="flex h-16 items-center justify-between gap-4">
                     <Link href="/" className="flex items-center gap-3 shrink-0">
-                        <div className="h-[34px] w-[34px] rounded-[11px]"
-                             style={{ background: 'linear-gradient(120deg,#a78bfa 0 50%,#fb7185 50% 100%)' }} />
+                        <Logo className="h-8 w-8" />
                         <span className="text-[16px]">
                             <span className="font-bold text-[#eef2f0]">Joint</span>
                             <span className="font-medium text-[#7f8c84]"> Expenses</span>

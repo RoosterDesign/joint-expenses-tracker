@@ -14,6 +14,9 @@ Two of the trickiest pieces are provided as near-final components you can drop s
 - **`tsx/EditableExpensesList.tsx`** — the expense feed with the ⋯ menu, edit sheet, and
   delete-confirm dialog, wired to your existing `updateExpense` / `deleteExpense` services.
 
+- **`tsx/Logo.tsx`** — the brand mark (cut-out yin-yang swirl, purple + coral). Drop-in React
+  component with a uniquified mask id.
+
 They use Tailwind **arbitrary values** (e.g. `bg-[#141b18]`) so they compile before you add the
 tokens to `tailwind.config.ts`, and expect a `--font-space-grotesk` CSS var for money figures
 (set it up in `layout.tsx` via `next/font/google`). Treat the rest of the screens below as the spec.
@@ -43,6 +46,10 @@ using Tailwind. Where a value isn't listed, read it off `design-reference.html`.
 ## Design tokens
 
 ### Colour
+**Chosen palette: Sky & Coral (option 4a).** Neil = sky, Lou = coral, primary buttons = sky,
+delete = a distinct red (`#f43f5e`) so it never reads as Lou's coral. Anywhere older text below
+still says `#34d399` (Neil green) or `#a78bfa` (Lou violet), use the values in this table instead.
+
 | Token | Hex / value | Use |
 |---|---|---|
 | `bg` (app background) | `#0c110f` | page background, mobile frame |
@@ -57,14 +64,14 @@ using Tailwind. Where a value isn't listed, read it off `design-reference.html`.
 | `text-dim` | `#c3ccc7` | secondary text |
 | `text-muted` | `#8a978f` | labels |
 | `text-faint` | `#7c887f` | meta ("your half", dates) |
-| **Neil / user1** | `#34d399` | avatar, dot, share, primary buttons |
-| Neil tint bg | `rgba(52,211,153,0.15)` | avatar bg, active toggle |
-| on-Neil (text on green) | `#06110c` | text on green buttons |
-| **Lou / user2** | `#a78bfa` | avatar, dot, share, balance figure |
-| Lou tint bg | `rgba(167,139,250,0.16)` | avatar bg |
-| **danger** | `#fb7185` | delete |
-| danger tint | `rgba(251,113,133,0.1)` | delete row / confirm icon bg |
-| on-danger | `#1a0509` | text on the solid delete button |
+| **Neil / user1** | `#38bdf8` (sky) | avatar, dot, split bar, primary buttons |
+| Neil tint bg | `rgba(56,189,248,0.16)` | avatar bg, active toggle |
+| on-Neil (text on sky) | `#05131c` | text on sky buttons |
+| **Lou / user2** | `#fb7185` (coral) | avatar, dot, split bar, balance figure |
+| Lou tint bg | `rgba(251,113,133,0.16)` | avatar bg |
+| **danger** | `#f43f5e` | delete (distinct from Lou's coral) |
+| danger tint | `rgba(244,63,94,0.12)` | delete row / confirm icon bg |
+| on-danger | `#ffffff` | text on the solid delete button |
 
 > Neil is **always** green and Lou **always** violet across avatars, dots, the split bar, and
 > summary figures. Map `user1Name`→green, `user2Name`→violet.
@@ -109,9 +116,10 @@ and use it on all money figures. Remove the light `bg-gray` page background.
 ## Screens / components
 
 ### Header — `src/components/Header.tsx`
-- Left: **logo mark** = a 34px rounded square (`rounded-[11px]`) with a 50/50 split fill
-  `linear-gradient(120deg,#34d399 0 50%,#a78bfa 50% 100%)`, then wordmark "**Joint** Expenses"
-  ("Joint" bold `#eef2f0`, " Expenses" `#7f8c84` weight 500).
+- Left: **logo mark** = the brand SVG in `tsx/Logo.tsx` (the cut-out yin-yang swirl, purple
+  `#a78bfa` + coral `#fb7185`) at 32–34px — `<Logo className="h-8 w-8" />` — then wordmark
+  "**Joint** Expenses" ("Joint" bold `#eef2f0`, " Expenses" `#7f8c84` weight 500). The dots are real
+  transparent cut-outs, so no tile/background is needed behind the mark.
 - Center/right: **segmented toggle** for `Expenses` / `Archive` — a pill container
   `bg-surface border border-white/[0.07] rounded-full p-1`; active item `bg-[#242e29] font-semibold`,
   inactive `text-muted`. Drive the active state from `usePathname()` (as today).
@@ -138,7 +146,7 @@ This becomes the **hero**. Keep the existing calc (`user1Sum`, `user2Sum`, `tota
   (`radial-gradient(circle,rgba(52,211,153,.22),transparent 70%)`, 180px, `overflow:hidden`).
 - Content: label "Balance · June 2026" (`text-muted 13px`), then "`{ower} owes {owed}`" (`text-dim 15px`),
   then the **big figure** in Space Grotesk 700 66px coloured with the **owed** person's colour
-  (violet when Neil owes Lou, green when Lou owes Neil). If settled, show "All square" instead.
+  (coral when Neil owes Lou, sky when Lou owes Neil). If settled, show "All square" instead.
 - **Split bar** (directly under the figure):
   - Track: `height:14px; border-radius:9999px; overflow:hidden; display:flex`.
   - Segment 1 width = `user1Sum / totalSpent * 100%`, `bg #34d399` (Neil).
@@ -217,9 +225,16 @@ derive from the archive timestamp or omit that pill.)
 No new global state. Reuse existing hooks in `EditableExpensesList` (`editingItemId`, `editedItem`,
 `modalOpen`, `deletingItemId`) and `NewExpensesForm`. Add only local `menuOpenId` for the ⋯ popover.
 
-## Assets
+## Assets (in `assets/`)
 - Fonts: **Instrument Sans** + **Space Grotesk** via `next/font/google`.
-- Logo mark is pure CSS (gradient split square) — no image needed; you can retire `logo.svg`.
+- **Brand mark / logo:** `assets/logo.svg` (= `tsx/Logo.tsx`). Cut-out yin-yang swirl,
+  purple `#a78bfa` + coral `#fb7185`, transparent dots. Retire the old `logo.svg`.
+- **Favicons:** `assets/favicon.svg` (scalable, transparent cut-outs) +
+  `assets/favicon-48x48.png` + `assets/favicon-32x32.png`. Copy into `public/`.
+- **Apple touch icon:** `assets/apple-touch-icon.png` (180×180, opaque dark tile `#0e1613`
+  — iOS can't use transparency, so the dots sit on the tile). Copy into `public/`.
+- Wire them up in `src/app/layout.tsx` `metadata.icons` (icon = favicon.svg + png, apple =
+  apple-touch-icon.png), replacing the current Vercel/Next defaults.
 - No icon library required: ⋯ (U+22EF), ✎ (U+270E), ✕ (U+2715), › (U+203A), and coloured dots/CSS.
 
 ## Files to touch

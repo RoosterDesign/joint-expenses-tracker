@@ -34,11 +34,12 @@ export default function RootLayout({
         <html lang="en">
             <head>
                 <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
+                <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
                 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
                 <link rel="shortcut icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
                 <meta name="apple-mobile-web-app-title" content="JET" />
-                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="manifest" href="/manifest.json" />
             </head>
             <body className={`${instrumentSans.variable} ${spaceGrotesk.variable}`}>
                 <div className="min-h-screen flex flex-col bg-[#0c110f] text-[#eef2f0]" style={{ fontFamily: 'var(--font-instrument-sans), sans-serif' }}>

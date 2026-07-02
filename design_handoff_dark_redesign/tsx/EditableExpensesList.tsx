@@ -17,10 +17,11 @@ import SavingSpinner from '@/components/SavingSpinner';
  * Keeps the existing updateExpense / deleteExpense services and the ExpensesItem model.
  */
 
-const NEIL = '#34d399';
-const LOU = '#a78bfa';
-const NEIL_TINT = 'rgba(52,211,153,0.15)';
-const LOU_TINT = 'rgba(167,139,250,0.16)';
+const NEIL = '#38bdf8'; // sky
+const LOU = '#fb7185';  // coral
+const NEIL_TINT = 'rgba(56,189,248,0.16)';
+const LOU_TINT = 'rgba(251,113,133,0.16)';
+const DANGER = '#f43f5e'; // kept distinct from Lou's coral
 
 interface Props {
     listDetails?: ExpensesList;
@@ -130,32 +131,32 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                     </div>
 
                     <label className="mb-[7px] block text-[12px] text-[#8a978f]">Amount</label>
-                    <div className="mb-[22px] flex h-[52px] items-center rounded-[13px] border border-[rgba(52,211,153,0.35)] bg-[#0e1512] px-[15px]">
-                        <span className="mr-2 font-num text-[18px] font-bold text-[#34d399]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
+                    <div className="mb-[22px] flex h-[52px] items-center rounded-[13px] border border-[rgba(56,189,248,0.35)] bg-[#0e1512] px-[15px]">
+                        <span className="mr-2 font-num text-[18px] font-bold text-[#38bdf8]" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}>£</span>
                         <input type="number" step="any" min="0" value={edit.amount} onChange={(e) => setEdit({ ...edit, amount: e.target.value })}
                                className="w-full bg-transparent font-num text-[18px] font-semibold text-[#eef2f0] outline-none" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }} />
                     </div>
 
-                    {error && <p className="mb-3 text-[13px] font-semibold text-[#fb7185]">{error}</p>}
+                    {error && <p className="mb-3 text-[13px] font-semibold text-[#f43f5e]">{error}</p>}
 
                     <div className="mb-[14px] flex gap-[10px]">
-                        <button onClick={handleSave} className="flex h-[50px] flex-1 items-center justify-center rounded-full bg-[#34d399] text-[15px] font-bold text-[#06110c]">Save changes</button>
+                        <button onClick={handleSave} className="flex h-[50px] flex-1 items-center justify-center rounded-full bg-[#38bdf8] text-[15px] font-bold text-[#05131c]">Save changes</button>
                         <button onClick={() => setEdit(null)} className="h-[50px] rounded-full border border-white/[0.12] px-[22px] text-[14px] font-semibold text-[#c3ccc7]">Cancel</button>
                     </div>
                     <button onClick={() => { const item = listItems.find((i) => i.id === edit.id) || null; setEdit(null); setDeleting(item); }}
-                            className="w-full text-center text-[13px] font-semibold text-[#fb7185]">Delete this expense</button>
+                            className="w-full text-center text-[13px] font-semibold text-[#f43f5e]">Delete this expense</button>
                 </Modal>
             )}
 
             {/* DELETE CONFIRM */}
             {deleting && (
                 <Modal>
-                    <div className="mx-auto mb-4 flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-[rgba(251,113,133,0.14)] text-[22px] text-[#fb7185]">✕</div>
+                    <div className="mx-auto mb-4 flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-[rgba(244,63,94,0.14)] text-[22px] text-[#f43f5e]">✕</div>
                     <h3 className="mb-2 text-center text-[18px] font-bold text-[#eef2f0]">Delete this expense?</h3>
                     <p className="mb-[22px] text-center text-[13.5px] leading-relaxed text-[#8a978f]">
                         &quot;{deleting.name} · £{formatNumber(amountOf(deleting))}&quot; will be removed for both of you. This can&apos;t be undone.
                     </p>
-                    <button onClick={handleDelete} className="mb-2.5 flex h-[50px] w-full items-center justify-center rounded-full bg-[#fb7185] text-[15px] font-bold text-[#1a0509]">Delete expense</button>
+                    <button onClick={handleDelete} className="mb-2.5 flex h-[50px] w-full items-center justify-center rounded-full bg-[#f43f5e] text-[15px] font-bold text-[#ffffff]">Delete expense</button>
                     <button onClick={() => setDeleting(null)} className="flex h-[50px] w-full items-center justify-center rounded-full border border-white/[0.12] text-[14px] font-semibold text-[#c3ccc7]">Keep it</button>
                 </Modal>
             )}
@@ -199,7 +200,7 @@ const EditableExpensesList: React.FC<Props> = ({ listDetails, listItems }) => {
                                     <button onClick={() => openEdit(item)} className="flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[13.5px] font-medium text-[#eef2f0] hover:bg-white/5">
                                         <span className="text-[14px]">✎</span> Edit expense
                                     </button>
-                                    <button onClick={() => { setMenuOpenId(null); setDeleting(item); }} className="flex w-full items-center gap-2.5 rounded-[10px] bg-[rgba(251,113,133,0.1)] px-3 py-2.5 text-left text-[13.5px] font-medium text-[#fb7185]">
+                                    <button onClick={() => { setMenuOpenId(null); setDeleting(item); }} className="flex w-full items-center gap-2.5 rounded-[10px] bg-[rgba(244,63,94,0.1)] px-3 py-2.5 text-left text-[13.5px] font-medium text-[#f43f5e]">
                                         <span className="text-[13px]">✕</span> Delete
                                     </button>
                                 </div>
